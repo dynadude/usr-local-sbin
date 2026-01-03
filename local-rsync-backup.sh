@@ -45,7 +45,11 @@ fi
 
 rsync -i -a --hard-links --one-file-system --delete --delete-excluded --exclude-from=<(echo "$EXCLUDED_DIRS") "$SRC_PATH/" "$DEST_PATH/" || (
 	EXIT_CODE="$?"
-	if [ "$EXIT_CODE" = "$RSYNC_FILES_VANISHED_EXIT_CODE" ]; then exit 0; else exit "$EXIT_CODE"; fi
+	if [ "$EXIT_CODE" = "$RSYNC_FILES_VANISHED_EXIT_CODE" ]; then
+		exit 0
+	else
+		exit "$EXIT_CODE"
+	fi
 )
 
 # update the destination dir's modification date
