@@ -11,33 +11,14 @@ REMOTE_BACKUP_DIR='/var/storage/sagi/sagi-pc-backup'
 LOCAL_PATH="$1"
 REMOTE_DIR_NAME="$2"
 
+# We need to modify the destination path to include the server name before
+# passing manually both paths to local-rsync-backup.sh (the rest of the parameters will be passed automatically, except for -n)
 shift
 shift
 
-EXCLUDED_DIRS=''
-while getopts "x:" opt; do
-	case "${opt}" in
-	x)
-		EXCLUDED_DIRS+="$OPTARG"$'\n'
-		;;
-	*)
-		# no idea why it's 12
-		exit 12
-		;;
-	esac
-done
-shift $((OPTIND - 1))
-
-# ARGUMENT VALIDATION
-if [ -z "$LOCAL_PATH" ]; then
-	echo 'The local dir to back up was not specified. Exiting...' >&2
-	exit 1
-fi
-
-if ! [ -d "$LOCAL_PATH" ]; then
-	echo 'The specified local dir to back up does not exist or is not a directory. Exiting...' >&2
-	exit 2
-fi
+SCRIPT_DIR="$(dirname ${0})"
+LOCAL_RSYNC_BACKUP_SCRIPT_PATH="${SCRIPT_DIR}/local-rsync-backup.sh"
+FULL_TARGET_PATH="$REMOTE_SERVER:$REMOTE_BACKUP_DIR/$REMOTE_DIR_NAME"
 
 # remote dir name default value
 if [ -z "$REMOTE_DIR_NAME" ]; then
@@ -50,15 +31,10 @@ if [ -z "$REMOTE_DIR_NAME" ]; then
 	fi
 fi
 
-# THE BACKUP PROCESS
-TARGET_DIR="$REMOTE_SERVER:$REMOTE_BACKUP_DIR/$REMOTE_DIR_NAME"
-echo "Backing up '$LOCAL_PATH' to '$TARGET_DIR'"
-if [ -n "${EXCLUDED_DIRS}" ]; then
-	echo 'Excluded Dirs:'
-	echo "${EXCLUDED_DIRS}"
-fi
-
-(rsync -i -a --compress-choice=zstd --hard-links --one-file-system --delete --delete-excluded --exclude-from=<(echo "$EXCLUDED_DIRS") "$LOCAL_PATH/" "${TARGET_DIR}/" || exit 0)
+# CALLING THE LOCAL RSYNC BACKUP SCRIPT
+# There's no need to validate parameters since the local script will do that.
+# Pass along all parameters to the local scripts (exclusion dirs)
+"${LOCAL_RSYNC_BACKUP_SCRIPT_PATH}" "${LOCAL_PATH}" "${FULL_TARGET_PATH}" -n "$@"
 
 # update the remote dir's modification date
 ssh "$REMOTE_SERVER" "touch '$REMOTE_BACKUP_DIR/$REMOTE_DIR_NAME'"
