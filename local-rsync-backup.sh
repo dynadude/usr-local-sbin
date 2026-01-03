@@ -47,7 +47,9 @@ if [ -n "${EXCLUDED_DIRS}" ]; then
 	echo "${EXCLUDED_DIRS}"
 fi
 
-rsync -i -a --hard-links --one-file-system --delete --delete-excluded --exclude-from=<(echo "$EXCLUDED_DIRS") "$SRC_PATH/" "$DEST_PATH/" || (
+# Compression is useful for remote backups, but is useless for local ones.
+# It is always enabled here since it does not cause a big enough of an overhead to care.
+rsync -i -a --compress-choice=zstd --hard-links --one-file-system --delete --delete-excluded --exclude-from=<(echo "$EXCLUDED_DIRS") "$SRC_PATH/" "$DEST_PATH/" || (
 	EXIT_CODE="$?"
 	if [ "$EXIT_CODE" = "$RSYNC_FILES_VANISHED_EXIT_CODE" ]; then
 		exit 0
