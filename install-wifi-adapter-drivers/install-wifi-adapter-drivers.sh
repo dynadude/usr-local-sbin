@@ -15,4 +15,3 @@ if ! [ -d "${driverInstallDir}" ]; then
 	echo "Driver is not installed for the Linux kernel currently in use. Reinstalling driver from ${driverDebPackagePath}..."
 	apt reinstall -y "${driverDebPackagePath}"
 fi
-
