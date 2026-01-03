@@ -6,6 +6,7 @@ set -e
 RSYNC_FILES_VANISHED_EXIT_CODE=24
 
 # SCRIPT ARGUMENTS
+# The source and destination paths have to come before the other parameters
 SRC_PATH="$1"
 DEST_PATH="$2"
 
