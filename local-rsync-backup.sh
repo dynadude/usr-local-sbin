@@ -32,7 +32,7 @@ if [ -z "$SRC_PATH" ]; then
 fi
 
 if [ -z "$DEST_PATH" ]; then
-	echo 'The specified destination dir to back up does not exist or is not a directory. Exiting...' >&2
+	echo 'The backup destination dir was not specified. Exiting...' >&2
 	exit 3
 fi
 
