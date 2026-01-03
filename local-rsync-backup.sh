@@ -31,11 +31,6 @@ if [ -z "$SRC_PATH" ]; then
 	exit 1
 fi
 
-if ! [ -d "$SRC_PATH" ]; then
-	echo 'The specified source dir to back up does not exist or is not a directory. Exiting...' >&2
-	exit 2
-fi
-
 if [ -z "$DEST_PATH" ]; then
 	echo 'The specified destination dir to back up does not exist or is not a directory. Exiting...' >&2
 	exit 3
