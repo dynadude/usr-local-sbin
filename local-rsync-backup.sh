@@ -14,10 +14,13 @@ shift
 shift
 
 EXCLUDED_DIRS=''
-while getopts "x:" opt; do
+while getopts "x:n" opt; do
 	case "${opt}" in
 	x)
 		EXCLUDED_DIRS+="$OPTARG"$'\n'
+		;;
+	n)
+		NO_TOUCH=1
 		;;
 	*)
 		exit 12
@@ -53,5 +56,8 @@ rsync -i -a --hard-links --one-file-system --delete --delete-excluded --exclude-
 	fi
 )
 
-# update the destination dir's modification date
-touch "$DEST_PATH"
+# This parameter is used by the remote-backup.sh script
+if ! [ "$NO_TOUCH" = 1 ]; then
+	# update the destination dir's modification date
+	touch "$DEST_PATH"
+fi
