@@ -12,6 +12,7 @@ REMOTE_SERVER='192.168.1.231'
 REMOTE_BACKUP_DIR='/var/storage/sagi/sagi-pc-backup'
 
 # SCRIPT ARGUMENTS
+# The source and destination paths have to come before the other parameters
 LOCAL_PATH="$1"
 REMOTE_DIR_NAME="$2"
 FULL_TARGET_PATH="$REMOTE_SERVER:$REMOTE_BACKUP_DIR/$REMOTE_DIR_NAME"
