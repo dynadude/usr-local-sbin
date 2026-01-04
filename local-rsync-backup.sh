@@ -14,6 +14,7 @@ DEST_PATH="$2"
 # ARGUMENT VALIDATION
 validatePathsSpecified "$SRC_PATH" "$DEST_PATH"
 
+# Necessary because getopts doesn't do exclusions correctly otherwise for some reason
 shift
 shift
 
