@@ -17,11 +17,7 @@ validatePathsAreSpecified "$SRC_PATH" "$DEST_PATH"
 EXCLUDED_DIRS="$(getExcludedDirsFromArgs "$@")"
 
 # THE BACKUP PROCESS
-echo "Backing up '$SRC_PATH' to '$DEST_PATH'"
-if [ -n "${EXCLUDED_DIRS}" ]; then
-	echo 'Excluded Dirs:'
-	echo "${EXCLUDED_DIRS}"
-fi
+printBackupMessage "$SRC_PATH" "$DEST_PATH" "$EXCLUDED_DIRS"
 
 syncDirs "$SRC_PATH" "$DEST_PATH" "$EXCLUDED_DIRS"
 

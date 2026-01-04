@@ -36,6 +36,18 @@ function getExcludedDirsFromArgs() (
 	echo "$excludedDirs"
 )
 
+function printBackupMessage() (
+	sourcePath="$1"
+	destinationPath="$2"
+	excludedDirs="$3"
+
+	echo "Backing up '$sourcePath' to '$destinationPath'"
+	if [ -n "${excludedDirs}" ]; then
+		echo 'Excluded Dirs:'
+		echo "${excludedDirs}"
+	fi
+)
+
 function syncDirs() (
 	RSYNC_FILES_VANISHED_EXIT_CODE=24
 
