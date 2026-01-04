@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function validatePathsSpecified() (
+function validatePathsAreSpecified() (
 	sourcePath="$1"
 	destinationPath="$2"
 

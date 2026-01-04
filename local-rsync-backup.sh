@@ -12,7 +12,7 @@ SRC_PATH="$1"
 DEST_PATH="$2"
 
 # ARGUMENT VALIDATION
-validatePathsSpecified "$SRC_PATH" "$DEST_PATH"
+validatePathsAreSpecified "$SRC_PATH" "$DEST_PATH"
 
 EXCLUDED_DIRS="$(getExcludedDirsFromArgs "$@")"
 

@@ -15,7 +15,7 @@ LOCAL_PATH="$1"
 REMOTE_DIR_NAME="$2"
 
 # ARGUMENT VALIDATION
-validatePathsSpecified "$LOCAL_PATH" "$REMOTE_DIR_NAME"
+validatePathsAreSpecified "$LOCAL_PATH" "$REMOTE_DIR_NAME"
 
 # We need to modify the destination path to include the server name before
 # passing manually both paths to local-rsync-backup.sh (the rest of the parameters will be passed automatically, except for -n)
