@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Import functions
-. ./backup-utils.sh
+SCRIPT_DIR="$(dirname ${0})"
+. "${SCRIPT_DIR}/backup-utils.sh"
 
 # fail script if anything fails
 set -e
