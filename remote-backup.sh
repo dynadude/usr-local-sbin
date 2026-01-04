@@ -14,22 +14,17 @@ REMOTE_BACKUP_DIR='/var/storage/sagi/sagi-pc-backup'
 # SCRIPT ARGUMENTS
 LOCAL_PATH="$1"
 REMOTE_DIR_NAME="$2"
+FULL_TARGET_PATH="$REMOTE_SERVER:$REMOTE_BACKUP_DIR/$REMOTE_DIR_NAME"
 
 # ARGUMENT VALIDATION
 validatePathsAreSpecified "$LOCAL_PATH" "$REMOTE_DIR_NAME"
 
-# We need to modify the destination path to include the server name before
-# passing manually both paths to local-rsync-backup.sh (the rest of the parameters will be passed automatically, except for -n)
-shift
-shift
+EXCLUDED_DIRS="$(getExcludedDirsFromArgs "$@")"
 
-SCRIPT_DIR="$(dirname ${0})"
-LOCAL_RSYNC_BACKUP_SCRIPT_PATH="${SCRIPT_DIR}/local-rsync-backup.sh"
-FULL_TARGET_PATH="$REMOTE_SERVER:$REMOTE_BACKUP_DIR/$REMOTE_DIR_NAME"
+# THE BACKUP PROCESS
+printBackupMessage "$LOCAL_PATH" "$FULL_TARGET_PATH" "$EXCLUDED_DIRS"
 
-# CALLING THE LOCAL RSYNC BACKUP SCRIPT
-# Pass along all parameters to the local scripts (exclusion dirs)
-"${LOCAL_RSYNC_BACKUP_SCRIPT_PATH}" "${LOCAL_PATH}" "${FULL_TARGET_PATH}" -n "$@"
+syncDirs "$LOCAL_PATH" "$FULL_TARGET_PATH" "$EXCLUDED_DIRS"
 
 # update the remote dir's modification date
 ssh "$REMOTE_SERVER" "touch '$REMOTE_BACKUP_DIR/$REMOTE_DIR_NAME'"
