@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+# Import functions
+. ./backup-utils.sh
+
 # fail script if anything fails
 set -e
-
-RSYNC_FILES_VANISHED_EXIT_CODE=24
 
 # SCRIPT ARGUMENTS
 # The source and destination paths have to come before the other parameters
@@ -11,15 +12,7 @@ SRC_PATH="$1"
 DEST_PATH="$2"
 
 # ARGUMENT VALIDATION
-if [ -z "$SRC_PATH" ]; then
-	echo 'The source dir to back up was not specified. Exiting...' >&2
-	exit 1
-fi
-
-if [ -z "$DEST_PATH" ]; then
-	echo 'The backup destination dir was not specified. Exiting...' >&2
-	exit 3
-fi
+validatePathsSpecified "$SRC_PATH" "$DEST_PATH"
 
 shift
 shift
@@ -47,16 +40,7 @@ if [ -n "${EXCLUDED_DIRS}" ]; then
 	echo "${EXCLUDED_DIRS}"
 fi
 
-# Compression is useful for remote backups, but is useless for local ones.
-# It is always enabled here since it does not cause a big enough of an overhead to care.
-rsync -i -a --compress-choice=zstd --hard-links --one-file-system --delete --delete-excluded --exclude-from=<(echo "$EXCLUDED_DIRS") "$SRC_PATH/" "$DEST_PATH/" || (
-	EXIT_CODE="$?"
-	if [ "$EXIT_CODE" = "$RSYNC_FILES_VANISHED_EXIT_CODE" ]; then
-		exit 0
-	else
-		exit "$EXIT_CODE"
-	fi
-)
+syncDirs "$SRC_PATH" "$DEST_PATH" "$EXCLUDED_DIRS"
 
 # This parameter is used by the remote-backup.sh script
 if ! [ "$NO_TOUCH" = 1 ]; then
