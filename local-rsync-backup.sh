@@ -14,22 +14,7 @@ DEST_PATH="$2"
 # ARGUMENT VALIDATION
 validatePathsSpecified "$SRC_PATH" "$DEST_PATH"
 
-# Necessary because getopts doesn't do exclusions correctly otherwise for some reason
-shift
-shift
-
-EXCLUDED_DIRS=''
-while getopts "x:" opt; do
-	case "${opt}" in
-	x)
-		EXCLUDED_DIRS+="$OPTARG"$'\n'
-		;;
-	*)
-		exit 12
-		;;
-	esac
-done
-shift $((OPTIND - 1))
+EXCLUDED_DIRS="$(getExcludedDirsFromArgs "$@")"
 
 # THE BACKUP PROCESS
 echo "Backing up '$SRC_PATH' to '$DEST_PATH'"

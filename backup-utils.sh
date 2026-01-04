@@ -15,6 +15,27 @@ function validatePathsSpecified() (
 	fi
 )
 
+function getExcludedDirsFromArgs() (
+	# Necessary because getopts doesn't do exclusions correctly otherwise for some reason
+	shift
+	shift
+
+	excludedDirs=''
+	while getopts "x:" opt; do
+		case "${opt}" in
+		x)
+			excludedDirs+="$OPTARG"$'\n'
+			;;
+		*)
+			exit 12
+			;;
+		esac
+	done
+	shift $((OPTIND - 1))
+
+	echo "$excludedDirs"
+)
+
 function syncDirs() (
 	RSYNC_FILES_VANISHED_EXIT_CODE=24
 
