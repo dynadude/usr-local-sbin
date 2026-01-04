@@ -26,17 +26,6 @@ SCRIPT_DIR="$(dirname ${0})"
 LOCAL_RSYNC_BACKUP_SCRIPT_PATH="${SCRIPT_DIR}/local-rsync-backup.sh"
 FULL_TARGET_PATH="$REMOTE_SERVER:$REMOTE_BACKUP_DIR/$REMOTE_DIR_NAME"
 
-# remote dir name default value
-if [ -z "$REMOTE_DIR_NAME" ]; then
-	echo 'The remote directory name was not specified. Using the local directory name...'
-	[[ "$LOCAL_PATH" =~ .*/(.*)/*$ ]]
-	REMOTE_DIR_NAME="${BASH_REMATCH[1]}"
-	if [ -z "$REMOTE_DIR_NAME" ]; then
-		echo 'Failed at getting the remote directory name from the local directory name. Exiting...' >&2
-		exit 3
-	fi
-fi
-
 # CALLING THE LOCAL RSYNC BACKUP SCRIPT
 # Pass along all parameters to the local scripts (exclusion dirs)
 "${LOCAL_RSYNC_BACKUP_SCRIPT_PATH}" "${LOCAL_PATH}" "${FULL_TARGET_PATH}" -n "$@"
