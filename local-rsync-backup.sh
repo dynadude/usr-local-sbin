@@ -19,13 +19,10 @@ shift
 shift
 
 EXCLUDED_DIRS=''
-while getopts "x:n" opt; do
+while getopts "x:" opt; do
 	case "${opt}" in
 	x)
 		EXCLUDED_DIRS+="$OPTARG"$'\n'
-		;;
-	n)
-		NO_TOUCH=1
 		;;
 	*)
 		exit 12
@@ -43,8 +40,5 @@ fi
 
 syncDirs "$SRC_PATH" "$DEST_PATH" "$EXCLUDED_DIRS"
 
-# This parameter is used by the remote-backup.sh script
-if ! [ "$NO_TOUCH" = 1 ]; then
-	# update the destination dir's modification date
-	touch "$DEST_PATH"
-fi
+# update the destination dir's modification date
+touch "$DEST_PATH"
