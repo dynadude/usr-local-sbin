@@ -10,6 +10,17 @@ RSYNC_FILES_VANISHED_EXIT_CODE=24
 SRC_PATH="$1"
 DEST_PATH="$2"
 
+# ARGUMENT VALIDATION
+if [ -z "$SRC_PATH" ]; then
+	echo 'The source dir to back up was not specified. Exiting...' >&2
+	exit 1
+fi
+
+if [ -z "$DEST_PATH" ]; then
+	echo 'The backup destination dir was not specified. Exiting...' >&2
+	exit 3
+fi
+
 shift
 shift
 
@@ -28,17 +39,6 @@ while getopts "x:n" opt; do
 	esac
 done
 shift $((OPTIND - 1))
-
-# ARGUMENT VALIDATION
-if [ -z "$SRC_PATH" ]; then
-	echo 'The source dir to back up was not specified. Exiting...' >&2
-	exit 1
-fi
-
-if [ -z "$DEST_PATH" ]; then
-	echo 'The backup destination dir was not specified. Exiting...' >&2
-	exit 3
-fi
 
 # THE BACKUP PROCESS
 echo "Backing up '$SRC_PATH' to '$DEST_PATH'"
