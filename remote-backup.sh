@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Import functions
+. ./backup-utils.sh
+
 # fail script if anything fails
 set -e
 
@@ -10,6 +13,9 @@ REMOTE_BACKUP_DIR='/var/storage/sagi/sagi-pc-backup'
 # SCRIPT ARGUMENTS
 LOCAL_PATH="$1"
 REMOTE_DIR_NAME="$2"
+
+# ARGUMENT VALIDATION
+validatePathsSpecified "$LOCAL_PATH" "$REMOTE_DIR_NAME"
 
 # We need to modify the destination path to include the server name before
 # passing manually both paths to local-rsync-backup.sh (the rest of the parameters will be passed automatically, except for -n)
@@ -32,7 +38,6 @@ if [ -z "$REMOTE_DIR_NAME" ]; then
 fi
 
 # CALLING THE LOCAL RSYNC BACKUP SCRIPT
-# There's no need to validate parameters since the local script will do that.
 # Pass along all parameters to the local scripts (exclusion dirs)
 "${LOCAL_RSYNC_BACKUP_SCRIPT_PATH}" "${LOCAL_PATH}" "${FULL_TARGET_PATH}" -n "$@"
 
