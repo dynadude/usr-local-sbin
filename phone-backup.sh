@@ -23,7 +23,10 @@ function getPhoneHost() (
 
 # GLOBALS
 REMOTE_USER='u0_a293'
-REMOTE_SERVER="$REMOTE_USER@$(getPhoneHost)"
+REMOTE_SERVER="$REMOTE_USER@$(getPhoneHost)" || (
+	echo 'Phone unreachable!' >&2
+	exit 1
+)
 SSH_PORT=8022
 
 # SCRIPT ARGUMENTS
