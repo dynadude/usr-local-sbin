@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+function isReachable() (
+	CONNECTION_ATTEMPTS=5
+
+	host="$1"
+
+	for i in {1.."$CONNECTION_ATTEMPTS"}; do
+		if ping -c 1 "$host" &>/dev/null; then
+			return 0
+		fi
+	done
+
+	return 1
+)
+
 function validatePathsAreSpecified() (
 	sourcePath="$1"
 	destinationPath="$2"
