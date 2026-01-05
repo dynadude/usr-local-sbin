@@ -66,4 +66,3 @@ function syncDirs() (
 		fi
 	)
 )
-
