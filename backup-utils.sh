@@ -68,10 +68,16 @@ function syncDirs() (
 	sourcePath="$1"
 	destinationPath="$2"
 	excludedDirs="$3"
+	sshPort="$4"
+	if [ -z "$sshPort" ]; then
+		sshCommand=()
+	else
+		sshCommand=(-e "ssh -p $sshPort")
+	fi
 
 	# Compression is useful for remote backups, but is useless for local ones.
 	# It is always enabled here since it does not cause a big enough of an overhead to care.
-	rsync -i -a --compress-choice=zstd --hard-links --one-file-system --delete --delete-excluded --exclude-from=<(echo "$excludedDirs") "${sourcePath}/" "${destinationPath}/" || (
+	rsync -i -a --compress-choice=zstd --hard-links --one-file-system --delete --delete-excluded "${sshCommand[@]}" --exclude-from=<(echo "$excludedDirs") "${sourcePath}/" "${destinationPath}/" || (
 		exitCode="$?"
 		if [ "$exitCode" = "$RSYNC_FILES_VANISHED_EXIT_CODE" ]; then
 			return 0
