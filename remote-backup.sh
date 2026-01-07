@@ -9,7 +9,7 @@ set -e
 
 # GLOBALS
 REMOTE_SERVER='192.168.1.231'
-REMOTE_BACKUP_DIR='/var/storage/sagi/sagi-pc-backup'
+REMOTE_BACKUP_DIR='/var/storage/sagi/sagi-pc-backups'
 
 # SCRIPT ARGUMENTS
 # The source and destination paths have to come before the other parameters
