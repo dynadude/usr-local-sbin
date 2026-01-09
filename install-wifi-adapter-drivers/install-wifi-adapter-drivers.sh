@@ -1,7 +1,8 @@
 #! /usr/bin/env bash
 
-# fail on any error
-set -e
+# BASH STRICT MODE
+set -o errexit # abort on nonzero exitstatus
+set -o nounset # abort on unbound variable
 set -o pipefail
 
 # START OF CONSTANT SECTION

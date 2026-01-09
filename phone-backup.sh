@@ -4,8 +4,10 @@
 SCRIPT_DIR="$(dirname ${0})"
 . "${SCRIPT_DIR}/backup-utils.sh"
 
-# fail script if anything fails
-set -e
+# BASH STRICT MODE
+set -o errexit # abort on nonzero exitstatus
+set -o nounset # abort on unbound variable
+set -o pipefail
 
 function getPhoneHost() (
 	PHONE_WIFI_HOST='sagi-phone'
@@ -31,7 +33,7 @@ SSH_PORT=8022
 
 # SCRIPT ARGUMENTS
 # The source and destination paths have to come before the other parameters
-REMOTE_PATH="$1"
+REMOTE_PATH="${1-}"
 LOCAL_PATH="/home/sagi/phone-backups/sagi"
 FULL_REMOTE_PATH="$REMOTE_SERVER:$REMOTE_PATH"
 

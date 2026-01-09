@@ -4,13 +4,15 @@
 SCRIPT_DIR="$(dirname ${0})"
 . "${SCRIPT_DIR}/backup-utils.sh"
 
-# fail script if anything fails
-set -e
+# BASH STRICT MODE
+set -o errexit # abort on nonzero exitstatus
+set -o nounset # abort on unbound variable
+set -o pipefail
 
 # SCRIPT ARGUMENTS
 # The source and destination paths have to come before the other parameters
-SRC_PATH="$1"
-DEST_PATH="$2"
+SRC_PATH="${1-}"
+DEST_PATH="${2-}"
 
 # ARGUMENT VALIDATION
 validatePathsAreSpecified "$SRC_PATH" "$DEST_PATH"

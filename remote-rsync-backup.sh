@@ -4,8 +4,10 @@
 SCRIPT_DIR="$(dirname ${0})"
 . "${SCRIPT_DIR}/backup-utils.sh"
 
-# fail script if anything fails
-set -e
+# BASH STRICT MODE
+set -o errexit # abort on nonzero exitstatus
+set -o nounset # abort on unbound variable
+set -o pipefail
 
 # GLOBALS
 REMOTE_SERVER='192.168.1.231'
@@ -13,8 +15,8 @@ REMOTE_BACKUP_DIR='/var/storage/sagi/sagi-pc-backups'
 
 # SCRIPT ARGUMENTS
 # The source and destination paths have to come before the other parameters
-LOCAL_PATH="$1"
-REMOTE_DIR_NAME="$2"
+LOCAL_PATH="${1-}"
+REMOTE_DIR_NAME="${2-}"
 FULL_TARGET_PATH="$REMOTE_SERVER:$REMOTE_BACKUP_DIR/$REMOTE_DIR_NAME"
 
 # ARGUMENT VALIDATION

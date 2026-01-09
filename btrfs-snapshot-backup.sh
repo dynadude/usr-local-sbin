@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-# fail script if anything fails
-set -e
+# BASH STRICT MODE
+set -o errexit # abort on nonzero exitstatus
+set -o nounset # abort on unbound variable
+set -o pipefail
 
-SRC_PATH="$1"
-SNAPSHOT_PREFIX="$2"
+SRC_PATH="${1-}"
+SNAPSHOT_PREFIX="${2-}"
 
 # ARGUMENT VALIDATION
 if [ -z "$SRC_PATH" ]; then

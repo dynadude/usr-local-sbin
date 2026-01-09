@@ -68,7 +68,7 @@ function syncDirs() (
 	sourcePath="$1"
 	destinationPath="$2"
 	excludedDirs="$3"
-	sshPort="$4"
+	sshPort="${4-}"
 	if [ -z "$sshPort" ]; then
 		sshCommand=()
 	else
