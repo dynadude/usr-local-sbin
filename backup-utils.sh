@@ -5,7 +5,7 @@ function isReachable() (
 
 	host="$1"
 
-	for i in {1.."$CONNECTION_ATTEMPTS"}; do
+	for ((i = 0; i < "${CONNECTION_ATTEMPTS}"; i++)); do
 		if ping -c 1 "$host" &>/dev/null; then
 			return 0
 		fi
