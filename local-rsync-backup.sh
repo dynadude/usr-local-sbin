@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Import functions
-SCRIPT_DIR="$(dirname ${0})"
+SCRIPT_DIR="$(dirname "${0}")"
 . "${SCRIPT_DIR}/backup-utils.sh"
 
 # BASH STRICT MODE
@@ -11,18 +11,18 @@ set -o pipefail
 
 # SCRIPT ARGUMENTS
 # The source and destination paths have to come before the other parameters
-SRC_PATH="${1-}"
-DEST_PATH="${2-}"
+sourcePath="${1-}"
+destinationPath="${2-}"
 
 # ARGUMENT VALIDATION
-validatePathsAreSpecified "$SRC_PATH" "$DEST_PATH"
+validatePathsAreSpecified "${sourcePath}" "${destinationPath}"
 
-EXCLUDED_DIRS="$(getExcludedDirsFromArgs "$@")"
+excludedDirs="$(getExcludedDirsFromArgs "$@")"
 
 # THE BACKUP PROCESS
-printBackupMessage "$SRC_PATH" "$DEST_PATH" "$EXCLUDED_DIRS"
+printBackupMessage "${sourcePath}" "${destinationPath}" "${excludedDirs}"
 
-syncDirs "$SRC_PATH" "$DEST_PATH" "$EXCLUDED_DIRS"
+syncDirs "${sourcePath}" "${destinationPath}" "${excludedDirs}"
 
 # update the destination dir's modification date
-touch "$DEST_PATH"
+touch "${destinationPath}"
