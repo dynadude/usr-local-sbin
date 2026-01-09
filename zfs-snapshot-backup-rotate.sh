@@ -15,10 +15,10 @@ fi
 
 dirsToRemove=$(zfs list -t snapshot -o name "${dataset}" | tail -n +2 | head -n -"${backupsToKeep}")
 
-if [ -n "$dirsToRemove" ]; then
-	echo "Removing Backups:"
-	echo "$dirsToRemove"
-	echo "$dirsToRemove" | xargs -n1 zfs destroy
+if [ -n "${dirsToRemove}" ]; then
+	echo 'Removing Backups:'
+	echo "${dirsToRemove}"
+	echo "${dirsToRemove}" | xargs -n1 zfs destroy
 else
-	echo "No Backups to Remove"
+	echo 'No Backups to Remove'
 fi
