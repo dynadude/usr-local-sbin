@@ -30,22 +30,19 @@ function validatePathsAreSpecified() (
 )
 
 function getExcludedDirsFromArgs() (
-	# Necessary because getopts doesn't do exclusions correctly otherwise for some reason
-	shift
-	shift
-
 	excludedDirs=''
-	while getopts "x:" opt; do
-		case "${opt}" in
-		x)
-			excludedDirs+="$OPTARG"$'\n'
-			;;
-		*)
-			exit 12
-			;;
-		esac
+	# Use getopts while ignoring positional arguments
+	while [ $OPTIND -le "$#" ]; do
+		if getopts x: opt; then
+			case "${opt}" in
+			x)
+				excludedDirs+="$OPTARG"$'\n'
+				;;
+			esac
+		else
+			((OPTIND++))
+		fi
 	done
-	shift $((OPTIND - 1))
 
 	echo "$excludedDirs"
 )
