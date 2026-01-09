@@ -9,3 +9,5 @@ TIMESTAMP=$(date +"%Y-%m-%d_%H:%M:%S")
 snapshotName="storage-zpool/storage@${TIMESTAMP}"
 
 zfs snapshot "${snapshotName}"
+
+echo "Successfully created snapshot '${snapshotName}'"
