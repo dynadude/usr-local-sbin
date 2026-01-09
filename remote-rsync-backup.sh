@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Import functions
-SCRIPT_DIR="$(dirname ${0})"
+SCRIPT_DIR="$(dirname "${0}")"
 . "${SCRIPT_DIR}/backup-utils.sh"
 
 # BASH STRICT MODE
@@ -15,19 +15,20 @@ REMOTE_BACKUP_DIR='/var/storage/sagi/sagi-pc-backups'
 
 # SCRIPT ARGUMENTS
 # The source and destination paths have to come before the other parameters
-LOCAL_PATH="${1-}"
-REMOTE_DIR_NAME="${2-}"
-FULL_TARGET_PATH="$REMOTE_SERVER:$REMOTE_BACKUP_DIR/$REMOTE_DIR_NAME"
+localPath="${1-}"
+remoteDirName="${2-}"
+fullTargetPath="${REMOTE_SERVER}:${REMOTE_BACKUP_DIR}/${remoteDirName}"
 
 # ARGUMENT VALIDATION
-validatePathsAreSpecified "$LOCAL_PATH" "$REMOTE_DIR_NAME"
+validatePathsAreSpecified "${localPath}" "${remoteDirName}"
 
-EXCLUDED_DIRS="$(getExcludedDirsFromArgs "$@")"
+excludedDirs="$(getExcludedDirsFromArgs "$@")"
 
 # THE BACKUP PROCESS
-printBackupMessage "$LOCAL_PATH" "$FULL_TARGET_PATH" "$EXCLUDED_DIRS"
+printBackupMessage "${localPath}" "${fullTargetPath}" "${excludedDirs}"
 
-syncDirs "$LOCAL_PATH" "$FULL_TARGET_PATH" "$EXCLUDED_DIRS"
+syncDirs "${localPath}" "${fullTargetPath}" "${excludedDirs}"
 
 # update the remote dir's modification date
-ssh "$REMOTE_SERVER" "touch '$REMOTE_BACKUP_DIR/$REMOTE_DIR_NAME'"
+# shellcheck disable=SC2029 # Variables are expanded on the client side on purpose
+ssh "${REMOTE_SERVER}" "touch '${REMOTE_BACKUP_DIR}/${remoteDirName}'"
