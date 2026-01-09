@@ -5,8 +5,10 @@ set -o errexit # abort on nonzero exitstatus
 set -o nounset # abort on unbound variable
 set -o pipefail
 
+dataset="${1}"
+
 TIMESTAMP=$(date +"%Y-%m-%d_%H:%M:%S")
-snapshotName="storage-zpool/storage@${TIMESTAMP}"
+snapshotName="${dataset}@${TIMESTAMP}"
 
 zfs snapshot "${snapshotName}"
 

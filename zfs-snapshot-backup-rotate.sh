@@ -7,7 +7,9 @@ set -o pipefail
 
 backupsToKeep=30
 
-dirsToRemove=$(zfs list -t snapshot -o name storage-zpool/storage | tail -n +2 | head -n -${backupsToKeep})
+dataset="${1}"
+
+dirsToRemove=$(zfs list -t snapshot -o name "${dataset}" | tail -n +2 | head -n -${backupsToKeep})
 
 if [ -n "$dirsToRemove" ]; then
 	echo "Removing Backups:"
