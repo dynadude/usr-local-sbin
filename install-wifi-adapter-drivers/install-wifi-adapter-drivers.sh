@@ -6,7 +6,7 @@ set -o nounset # abort on unbound variable
 set -o pipefail
 
 # START OF CONSTANT SECTION
-driverDebPackagePath="$(dirname "$0")/aic8800d80fdrvpackage.deb"
+driverDebPackagePath="$(dirname "${0}")/aic8800d80fdrvpackage.deb"
 
 kernelVersion="$(uname -r)"
 driverInstallDir="/lib/modules/${kernelVersion}/kernel/drivers/net/wireless/aic8800"
