@@ -7,8 +7,8 @@ set -o pipefail
 
 dataset="${1}"
 
-TIMESTAMP=$(date +"%Y-%m-%d_%H:%M:%S")
-snapshotName="${dataset}@${TIMESTAMP}"
+timestamp=$(date +"%Y-%m-%d_%H:%M:%S")
+snapshotName="${dataset}@${timestamp}"
 
 zfs snapshot "${snapshotName}"
 
