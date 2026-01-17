@@ -38,6 +38,10 @@ function getExcludedDirsFromArgs() (
 			x)
 				excludedDirs+="${OPTARG}"$'\n'
 				;;
+
+			*)
+				exit 1
+				;;
 			esac
 		else
 			((OPTIND++))
