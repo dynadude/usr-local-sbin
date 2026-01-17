@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Import functions
-SCRIPT_DIR="$(dirname "${0}")"
+SCRIPT_DIR="$(realpath "$(dirname "${0}")")"
 . "${SCRIPT_DIR}/backup-utils.sh"
 
 # BASH STRICT MODE
