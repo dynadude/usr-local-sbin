@@ -9,6 +9,10 @@ function isReachable() (
 		if ping -c 1 "${host}" &>/dev/null; then
 			return 0
 		fi
+
+		# When the system comes back from suspension, networking needs time to start.
+		# For some reason, ping seems to fail instantly if that happens, so sleeping is necessary.
+		sleep 1
 	done
 
 	return 1
