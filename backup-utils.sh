@@ -23,7 +23,7 @@ function runWithRetries() (
 	return "${exitCode}"
 )
 
-function isReachable() (
+function isReachableIcmp() (
 	CONNECTION_ATTEMPTS=5
 	COOLDOWN_SECONDS=1
 
