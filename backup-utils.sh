@@ -25,20 +25,18 @@ function runWithRetries() (
 
 function isReachable() (
 	CONNECTION_ATTEMPTS=5
+	COOLDOWN_SECONDS=1
 
 	host="$1"
 
-	for ((i = 0; i < "${CONNECTION_ATTEMPTS}"; i++)); do
-		if ping -c 1 "${host}" &>/dev/null; then
-			return 0
-		fi
+	# shellcheck disable=SC2317 # This is called indirectly by runWithRetries
+	function pingHost() (
+		ping -c 1 "${host}" &>/dev/null
+	)
 
-		# When the system comes back from suspension, networking needs time to start.
-		# For some reason, ping seems to fail instantly if that happens, so sleeping is necessary.
-		sleep 1
-	done
-
-	return 1
+	# When the system comes back from suspension, networking needs time to start.
+	# For some reason, ping seems to fail instantly if that happens, so sleeping is necessary.
+	runWithRetries pingHost "${CONNECTION_ATTEMPTS}" "${COOLDOWN_SECONDS}"
 )
 
 function validatePathsAreSpecified() (
