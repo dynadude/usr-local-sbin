@@ -1,5 +1,28 @@
 #!/usr/bin/env bash
 
+function runWithRetries() (
+	func="$1"
+	maxRetries="$2"
+	cooldownSeconds="${3-0}"
+
+	if [ "${maxRetries}" -le 0 ]; then
+		echo "runWithRetries: the value for maxRetries must be a positive integer"
+	fi
+
+	for ((i = 1; i <= "${maxRetries}"; i++)); do
+		"${func}" && return
+
+		exitCode="$?"
+		echo "Running '${func}' failed on try ${i} out of ${maxRetries}" >&2
+
+		if [ "${cooldownSeconds}" -gt 0 ]; then
+			sleep "${cooldownSeconds}"
+		fi
+	done
+
+	return "${exitCode}"
+)
+
 function isReachable() (
 	CONNECTION_ATTEMPTS=5
 
