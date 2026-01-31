@@ -24,19 +24,19 @@ function runWithRetries() (
 )
 
 function isReachableIcmp() (
-	CONNECTION_ATTEMPTS=5
-	COOLDOWN_SECONDS=1
-
 	host="$1"
+	maxRetries="${2-5}"
+	timeoutSeconds="${3-1}"
+	cooldownSeconds="${4-1}"
 
 	# shellcheck disable=SC2317 # This is called indirectly by runWithRetries
 	function pingHost() (
-		ping -c 1 "${host}" &>/dev/null
+		ping -c 1 -W "${timeoutSeconds}" "${host}" &>/dev/null
 	)
 
 	# When the system comes back from suspension, networking needs time to start.
 	# For some reason, ping seems to fail instantly if that happens, so sleeping is necessary.
-	runWithRetries pingHost "${CONNECTION_ATTEMPTS}" "${COOLDOWN_SECONDS}"
+	runWithRetries pingHost "${maxRetries}" "${cooldownSeconds}"
 )
 
 function isReachableTcp() (
