@@ -28,7 +28,7 @@ if (
 ); then
 	mailContent=$(
 		cat <<-EOF
-			Subject: Service '${serviceName}' Failed
+			Subject: Service '${serviceName}' Failed on '${HOSTNAME}'
 
 			$(getOutputOfLastRunOfService "${serviceName}" || (
 				echo "Failed at getting the logs of the last run of '${serviceName}'. Aborting..."
