@@ -22,10 +22,10 @@ function getOutputOfLastRunOfService() (
 serviceName="${1}"
 emailAddress="${2-sagi.gam.11@gmail.com}"
 
-if (
+if [ "$(
 	set +o pipefail
-	systemctl show "${serviceName}" | grep '^ActiveState' | grep -i fail >/dev/null
-); then
+	systemctl show "${serviceName}" | grep '^ExecMainStatus' | grep -oE '[0-9]+'
+)" -ne 0 ]; then
 	mailContent=$(
 		cat <<-EOF
 			Subject: Service '${serviceName}' Failed on '${HOSTNAME}'
