@@ -39,6 +39,23 @@ function isReachableIcmp() (
 	runWithRetries pingHost "${CONNECTION_ATTEMPTS}" "${COOLDOWN_SECONDS}"
 )
 
+function isReachableTcp() (
+	host="$1"
+	port="$2"
+	maxRetries="${3-5}"
+	timeoutSeconds="${4-1}"
+	cooldownSeconds="${5-1}"
+
+	# shellcheck disable=SC2317 # This is called indirectly by runWithRetries
+	function ncHost() (
+		nc -z -w "${timeoutSeconds}" "${host}" "${port}" &>/dev/null
+	)
+
+	# When the system comes back from suspension, networking needs time to start.
+	# A cooldown isn't necessary with netcat as it is with ping, but I keep it for standardisation.
+	runWithRetries ncHost "${maxRetries}" "${cooldownSeconds}"
+)
+
 function validatePathsAreSpecified() (
 	sourcePath="$1"
 	destinationPath="$2"
