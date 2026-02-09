@@ -25,7 +25,7 @@ function runWithRetries() (
 
 function isReachableIcmp() (
 	host="$1"
-	maxRetries="${2-5}"
+	maxRetries="${2-10}"
 	timeoutSeconds="${3-1}"
 	cooldownSeconds="${4-1}"
 
@@ -42,7 +42,7 @@ function isReachableIcmp() (
 function isReachableTcp() (
 	host="$1"
 	port="$2"
-	maxRetries="${3-5}"
+	maxRetries="${3-10}"
 	timeoutSeconds="${4-1}"
 	cooldownSeconds="${5-1}"
 
