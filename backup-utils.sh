@@ -98,3 +98,8 @@ function contains() (
 
 	return 1
 )
+
+function getAllZfsDatasets() (
+	# The "grep" is there to filter out zpools
+	zfs list -H -o name | grep /
+)
