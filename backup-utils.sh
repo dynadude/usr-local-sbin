@@ -83,3 +83,18 @@ function syncDirs() (
 		fi
 	)
 )
+
+function contains() (
+	# KEEP IN MIND THAT "list" IS A NEWLINE-SEPARATED STRING
+	list="$1"
+	string="$2"
+
+	IFS=$'\n'
+	for item in ${list}; do
+		if [ "${item}" = "${string}" ]; then
+			return 0
+		fi
+	done
+
+	return 1
+)
