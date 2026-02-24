@@ -32,7 +32,7 @@ function validatePathsAreSpecified() (
 function getExcludedDirsFromArgs() (
 	excludedDirs=''
 	# Use getopts while ignoring positional arguments
-	while [ "${OPTIND}" -le "${#}" ]; do
+	while [ "${OPTIND}" -le "$#" ]; do
 		if getopts x: opt; then
 			case "${opt}" in
 			x)
@@ -75,7 +75,7 @@ function syncDirs() (
 	# Compression is useful for remote backups, but is useless for local ones.
 	# It is always enabled here since it does not cause a big enough of an overhead to care.
 	rsync -i -a --compress-choice=zstd --hard-links --one-file-system --delete --delete-excluded "${sshCommand[@]}" --exclude-from=<(echo "${excludedDirs}") "${sourcePath}/" "${destinationPath}/" || (
-		exitCode="${?}"
+		exitCode="$?"
 		if [ "${exitCode}" = "${RSYNC_FILES_VANISHED_EXIT_CODE}" ]; then
 			return 0
 		else
