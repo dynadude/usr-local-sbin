@@ -103,3 +103,10 @@ function getAllZfsDatasets() (
 	# The "grep" is there to filter out zpools
 	zfs list -H -o name | grep /
 )
+
+function getServiceExitCode() (
+	serviceName="$1"
+
+	set +o pipefail
+	systemctl show "${serviceName}" | grep '^ExecMainStatus' | grep -oE '[0-9]+'
+)
