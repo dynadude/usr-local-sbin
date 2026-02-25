@@ -104,6 +104,18 @@ function getAllZfsDatasets() (
 	zfs list -H -o name | grep /
 )
 
+function getLatestZfsSnapshot() (
+	dataset="$1"
+
+	latestSnapshot="$(zfs list -H -t snapshot -o name "${dataset}" | tail -1)"
+
+	if [ -n "${latestSnapshot}" ]; then
+		echo "${latestSnapshot}"
+	else
+		return 1
+	fi
+)
+
 function getServiceExitCode() (
 	serviceName="$1"
 
