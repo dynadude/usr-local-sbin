@@ -19,7 +19,7 @@ remoteDirName="${2}"
 snapshot="$(getLatestZfsSnapshot "${dataset}")"
 
 # The cat is there to make the shell wait for process substitution
-zfs send --raw --replicate "${snapshot}" |
+zfs send --raw --compressed --replicate "${snapshot}" |
 	tee >/dev/null \
 		>(echo "source file size: $(wc -c | numfmt --to=si)") \
 		>(echo "source hash: $(sha1sum)") \
