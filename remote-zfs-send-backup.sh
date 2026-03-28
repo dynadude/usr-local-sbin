@@ -23,7 +23,7 @@ zfs send --raw --compressed --replicate "${snapshot}" |
 	tee >/dev/null \
 		>(echo "source file size: $(wc -c | numfmt --to=si)") \
 		>(echo "source hash: $(sha1sum)") \
-		>(ssh "${REMOTE_SERVER}" 'tee >/dev/null >(echo "destination hash: $(sha1sum)") '"'${REMOTE_BACKUP_DIR}/${remoteDirName}/${OUTPUT_FILE_NAME}'") |
+		>(ssh "${REMOTE_SERVER}" 'tee >/dev/null >(echo "destination hash: $(sha1sum)") '"'${REMOTE_BACKUP_DIR}/${remoteDirName}/${OUTPUT_FILE_NAME}'" || kill $$) |
 	cat
 
 echo "Successfully backed up '${snapshot}'"
