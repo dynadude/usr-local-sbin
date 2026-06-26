@@ -14,7 +14,7 @@ function getPhoneHost() (
 	PHONE_HOTSPOT_HOST='10.42.0.115'
 
 	for host in "${PHONE_WIFI_HOST}" "${PHONE_HOTSPOT_HOST}"; do
-		if isReachable "${host}"; then
+		if isReachableIcmp "${host}"; then
 			echo "${host}"
 			return 0
 		fi

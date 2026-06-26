@@ -1,17 +1,59 @@
 #!/usr/bin/env bash
 
-function isReachable() (
-	CONNECTION_ATTEMPTS=5
+function runWithRetries() (
+	func="$1"
+	maxRetries="$2"
+	cooldownSeconds="${3-0}"
 
-	host="$1"
+	if [ "${maxRetries}" -le 0 ]; then
+		echo "runWithRetries: the value for maxRetries must be a positive integer"
+	fi
 
-	for ((i = 0; i < "${CONNECTION_ATTEMPTS}"; i++)); do
-		if ping -c 1 "${host}" &>/dev/null; then
-			return 0
+	for ((i = 1; i <= "${maxRetries}"; i++)); do
+		"${func}" && return
+
+		exitCode="$?"
+		echo "Running '${func}' failed on try ${i} out of ${maxRetries}" >&2
+
+		if [ "${cooldownSeconds}" -gt 0 ]; then
+			sleep "${cooldownSeconds}"
 		fi
 	done
 
-	return 1
+	return "${exitCode}"
+)
+
+function isReachableIcmp() (
+	host="$1"
+	maxRetries="${2-10}"
+	timeoutSeconds="${3-1}"
+	cooldownSeconds="${4-1}"
+
+	# shellcheck disable=SC2317 # This is called indirectly by runWithRetries
+	function pingHost() (
+		ping -c 1 -W "${timeoutSeconds}" "${host}" &>/dev/null
+	)
+
+	# When the system comes back from suspension, networking needs time to start.
+	# For some reason, ping seems to fail instantly if that happens, so sleeping is necessary.
+	runWithRetries pingHost "${maxRetries}" "${cooldownSeconds}"
+)
+
+function isReachableTcp() (
+	host="$1"
+	port="$2"
+	maxRetries="${3-10}"
+	timeoutSeconds="${4-1}"
+	cooldownSeconds="${5-1}"
+
+	# shellcheck disable=SC2317 # This is called indirectly by runWithRetries
+	function ncHost() (
+		nc -z -w "${timeoutSeconds}" "${host}" "${port}" &>/dev/null
+	)
+
+	# When the system comes back from suspension, networking needs time to start.
+	# A cooldown isn't necessary with netcat as it is with ping, but I keep it for standardisation.
+	runWithRetries ncHost "${maxRetries}" "${cooldownSeconds}"
 )
 
 function validatePathsAreSpecified() (
@@ -37,6 +79,10 @@ function getExcludedDirsFromArgs() (
 			case "${opt}" in
 			x)
 				excludedDirs+="${OPTARG}"$'\n'
+				;;
+
+			*)
+				exit 1
 				;;
 			esac
 		else
