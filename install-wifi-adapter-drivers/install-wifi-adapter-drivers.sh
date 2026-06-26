@@ -14,7 +14,11 @@ driverInstallDir="/lib/modules/${kernelVersion}/kernel/drivers/net/wireless/aic8
 
 if ! [ -d "${driverInstallDir}" ]; then
 	echo "Driver is not installed for the Linux kernel currently in use. Reinstalling driver from ${driverDebPackagePath}..."
-	apt reinstall -y "${driverDebPackagePath}"
+	apt reinstall -y "${driverDebPackagePath}" || (
+		code="$?"
+		echo 'Failed to install wifi drivers!!!!'
+		exit "${code}"
+	)
 
 	echo 'Restarting after a successful driver install...'
 	reboot
