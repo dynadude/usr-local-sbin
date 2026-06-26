@@ -27,6 +27,11 @@ excludedDirs="$(getExcludedDirsFromArgs "$@")"
 # THE BACKUP PROCESS
 printBackupMessage "${localPath}" "${fullTargetPath}" "${excludedDirs}"
 
+if ! isReachableTcp "${REMOTE_SERVER}" 22; then
+	echo "Failed to connect to '${REMOTE_SERVER}' on port 22. Aborting..." >&2
+	exit 1
+fi
+
 syncDirs "${localPath}" "${fullTargetPath}" "${excludedDirs}"
 
 # update the remote dir's modification date

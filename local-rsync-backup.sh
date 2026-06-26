@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
 # Import functions
-SCRIPT_DIR="$(dirname "${0}")"
+SCRIPT_DIR="$(realpath "$(dirname "${0}")")"
 . "${SCRIPT_DIR}/backup-utils.sh"
 
 # BASH STRICT MODE
-set -o errexit # abort on nonzero exitstatus
 set -o nounset # abort on unbound variable
 set -o pipefail
 
@@ -15,14 +14,18 @@ sourcePath="${1-}"
 destinationPath="${2-}"
 
 # ARGUMENT VALIDATION
-validatePathsAreSpecified "${sourcePath}" "${destinationPath}"
+validatePathsAreSpecified "${sourcePath}" "${destinationPath}" || exit
 
-excludedDirs="$(getExcludedDirsFromArgs "$@")"
+excludedDirs="$(getExcludedDirsFromArgs "$@")" || (
+	exitCode="${?}"
+	echo 'Failed at getting the excluded dirs from the command-line arguments' >&2
+	exit "${exitCode}"
+) || exit
 
 # THE BACKUP PROCESS
-printBackupMessage "${sourcePath}" "${destinationPath}" "${excludedDirs}"
+printBackupMessage "${sourcePath}" "${destinationPath}" "${excludedDirs}" || exit
 
-syncDirs "${sourcePath}" "${destinationPath}" "${excludedDirs}"
+syncDirs "${sourcePath}" "${destinationPath}" "${excludedDirs}" || exit
 
 # update the destination dir's modification date
-touch "${destinationPath}"
+touch "${destinationPath}" || exit
