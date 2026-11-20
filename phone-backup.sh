@@ -13,11 +13,22 @@ function getPhoneHost() (
 	PHONE_WIFI_HOST='sagi-phone'
 	PHONE_HOTSPOT_HOST='10.42.0.115'
 
-	for host in "${PHONE_WIFI_HOST}" "${PHONE_HOTSPOT_HOST}"; do
-		if isReachableIcmp "${host}"; then
-			echo "${host}"
-			return 0
-		fi
+	MAX_RETRIES='40'
+	RETRIES_PER_PING='1'
+
+	i='0'
+	while [ "${i}" -lt "${MAX_RETRIES}" ]; do
+		for host in "${PHONE_WIFI_HOST}" "${PHONE_HOTSPOT_HOST}"; do
+			if isReachableIcmp "${host}" "${RETRIES_PER_PING}" 2>/dev/null; then
+				echo "${host}"
+				return 0
+			fi
+
+			echo "Running 'getPhoneHost' failed on try $((i + 1)) out of ${MAX_RETRIES}" >&2
+
+			# Increment i inside the for loop to count each call to isReachableIcmp separately when incrementing i
+			i="$((i + 1))"
+		done
 	done
 
 	return 1
